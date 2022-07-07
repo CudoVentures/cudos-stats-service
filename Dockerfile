@@ -9,4 +9,6 @@ EXPOSE 3000
 
 RUN npm install
 
-CMD ["npm", "run", "start"]
+RUN npm install pm2 -g
+
+CMD ["pm2-runtime", "server.js"]

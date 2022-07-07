@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const { request, gql } = require('graphql-request');
 const numeral = require('numeral');
 
@@ -15,21 +16,29 @@ if (!HASURA_URL) {
 }
 
 const app = express();
+app.use(cors());
 
 app.listen(LISTEN_PORT, () => {
     console.log(`listening on ${LISTEN_PORT}`);
 });
 
-app.get('/supply', async (req, res) => {
-    const explorer = req.query.explorer;
+app.get('/circulating-supply', async (req, res) => {
+    const supply = await getSupply();
 
-    if (explorer == 'cmc') {
-        const supply = await getSupply();
-
-        res.set('Content-Type', 'text/html');
-        res.send(200, numeral(token.FormatToken(supply, 'acudos').value).value());
-    }
+    res.set('Content-Type', 'text/html');
+    res.send(200, formatSupply(supply));
 });
+
+app.get('/json/circulating-supply', async (req, res) => {
+    const supply = await getSupply();
+
+    res.set('Content-Type', 'application/json');
+    res.status(200).send(JSON.stringify({ supply: formatSupply(supply) }));
+});
+
+const formatSupply = (supply) => {
+    return numeral(token.FormatToken(supply, 'acudos').value).value()
+}
 
 const getSupply = async () => {
     const query = gql`query MarketData($denom: String) {

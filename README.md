@@ -12,4 +12,5 @@ Run the docker image:\
 ```docker run -d --name cudos-stats-service -p 3001:3000 cudos-stats-service```
 
 ## Available endpoints:
-http://127.0.0.1:3001/supply?explorer=cmc - coinmarketcap endpoint that is returning current circulating supply as decimal.
+http://127.0.0.1:3001/circulating-supply - coinmarketcap endpoint that is returning current circulating supply as decimal.\
+http://127.0.0.1:3001/json/circulating-supply - endpoint that is returning current circulating supply as json.
